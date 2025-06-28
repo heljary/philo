@@ -1,3 +1,5 @@
+#ifndef PHILO_H
+#define PHILO_H
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,9 +18,20 @@ typedef struct philosopher {
 typedef struct rules {
     int num_philosophers;   
     int time_to_die;     
-    int time_to_eat;   
     int time_to_sleep;  
+    int time_to_eat;   
     int must_eat_count; 
     long start_time;   
     pthread_mutex_t print_mutex;
+    pthread_mutex_t *forks;
 } t_rules;
+
+
+long get_time();
+
+#endif
+
+
+
+
+// int gettimeofday(struct timeval *tv, struct timezone *tz);

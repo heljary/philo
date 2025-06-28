@@ -1,42 +1,52 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: heljary <heljary@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/28 05:07:11 by heljary           #+#    #+#             */
+/*   Updated: 2025/06/28 05:07:12 by heljary          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-void *function(void *arg)
+
+
+void forks()
 {
-    pthread_mutex_t *fork = (pthread_mutex_t *)arg;
-    pthread_mutex_lock(fork);
-    printf("Thread locked mutex\n");
-    pthread_mutex_unlock(fork);
-    return NULL;
+    t_rules *rules;
+    rules->forks = malloc(sizeof(rules) * 5);
 }
 
-int main()
+
+int main(int ac,char **argv)
 {
-    int number_philo = 5;
-    pthread_mutex_t forks[number_philo];
-    pthread_t philo_threads[number_philo];
-    int i = 0;
-    while(i<number_philo)
+    t_rules *philo = malloc(sizeof(t_rules));
+    if(ac != 5 && ac != 6)
     {
-        pthread_mutex_init(&forks[i],NULL);
-        i++;
-    }
-    int ii=0;
-    while(ii<number_philo){
-        pthread_create(&philo_threads[ii],NULL,&function,&forks[ii]);
-        ii++;
+       return 1;
     }
 
-    int iii = 0;
-    while(iii<number_philo)
-    {
-        pthread_join(philo_threads[iii],NULL);
-        iii++;
-    }
+    philo->num_philosophers = atoi(argv[1]);
+    philo->time_to_die = atoi(argv[2]);
+    philo->time_to_eat = atoi(argv[3]);
+    philo->time_to_sleep = atoi(argv[4]);
+    philo->start_time = get_time();
 
-    int iiii=0;
-    while(iiii<number_philo)
-    {
-        pthread_mutex_destroy(&forks[iii]);
-        iiii++;
-    }
+    if (ac == 6)
+        philo->must_eat_count = atoi(argv[5]);
+    else
+        philo->must_eat_count = -1;
+    if (philo->num_philosophers <= 0 || philo->time_to_die <= 0 ||
+    philo->time_to_eat <= 0 || philo->time_to_sleep <= 0 ||
+    (ac == 6 && philo->must_eat_count <= 0))
+        return 1;
+    printf("%d\n",philo->num_philosophers);
+    printf("%d\n",philo->time_to_die);
+    printf("%d\n",philo->time_to_eat);
+    printf("%d\n",philo->time_to_sleep);
+    printf("%d\n",philo->must_eat_count);
+    printf("%ld\n",philo->start_time);
 }

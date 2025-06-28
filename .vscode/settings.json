@@ -1,0 +1,8 @@
+{
+    "screencastMode.keyboardOptions": {
+        "showCommandGroups": true
+    },
+    "files.associations": {
+        "philo.h": "c"
+    }
+}
