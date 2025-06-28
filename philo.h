@@ -27,7 +27,12 @@ typedef struct rules {
 } t_rules;
 
 
-long get_time();
+long ft_gettime();
+void *ft_init_rules(int ac,char **args);
+void ft_init_forks(t_rules *rules);
+void *ft_init_philosophers(t_rules *rules);
+void *ft_routine(void *args);
+
 
 #endif
 
