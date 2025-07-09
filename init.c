@@ -6,21 +6,11 @@
 /*   By: heljary <heljary@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 12:08:37 by heljary           #+#    #+#             */
-/*   Updated: 2025/06/28 13:52:14 by heljary          ###   ########.fr       */
+/*   Updated: 2025/07/01 16:03:37 by heljary          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-long ft_gettime()
-{
-    struct timeval tv;
-    long ms;
-    gettimeofday(&tv,NULL);
-    ms = (tv.tv_sec * 1000) + (tv.tv_usec/100);
-
-    return (ms);
-}
 
 void *ft_init_rules(int ac,char **args)
 {
@@ -30,7 +20,7 @@ void *ft_init_rules(int ac,char **args)
     ini_rules->time_to_eat = atoi(args[3]);
     ini_rules->time_to_sleep = atoi(args[4]);
     ini_rules->start_time = ft_gettime();
-
+    ini_rules->simulation_running = 1;
     if (ac == 6)
         ini_rules->must_eat_count = atoi(args[5]);
     else
@@ -42,6 +32,8 @@ void *ft_init_rules(int ac,char **args)
         free(ini_rules);
         return NULL;
     }
+    pthread_mutex_init(&(ini_rules->print_mutex),NULL);
+    pthread_mutex_init(&(ini_rules->meal_check_metuxes),NULL);
     return (ini_rules);
 }
 
@@ -71,7 +63,7 @@ void *ft_init_philosophers(t_rules *rules)
     while (i < rules->num_philosophers)
     {
         philo[i].id = i + 1;
-        philo[i].last_meal_time = 0;
+        philo[i].last_meal_time = rules->start_time;
         philo[i].times_eaten = 0;
         philo[i].left_fork = &rules->forks[i];
         philo[i].right_fork = &rules->forks[(i+1)%rules->num_philosophers];

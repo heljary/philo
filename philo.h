@@ -11,7 +11,7 @@ typedef struct philosopher {
     int times_eaten;   
     long last_meal_time; 
     pthread_mutex_t* left_fork;
-    pthread_mutex_t* right_fork; 
+    pthread_mutex_t* right_fork;
     struct rules* rules;     
 } t_philosopher;
 
@@ -20,9 +20,12 @@ typedef struct rules {
     int time_to_die;     
     int time_to_sleep;  
     int time_to_eat;   
-    int must_eat_count; 
+    int must_eat_count;
     long start_time;   
+    int simulation_running;
     pthread_mutex_t print_mutex;
+    pthread_mutex_t start_mutex;
+    pthread_mutex_t meal_check_metuxes;
     pthread_mutex_t *forks;
 } t_rules;
 
@@ -32,11 +35,7 @@ void *ft_init_rules(int ac,char **args);
 void ft_init_forks(t_rules *rules);
 void *ft_init_philosophers(t_rules *rules);
 void *ft_routine(void *args);
-
+int	ft_usleep(size_t milliseconds);
+void *ft_monitor_death(void *args);
 
 #endif
-
-
-
-
-// int gettimeofday(struct timeval *tv, struct timezone *tz);

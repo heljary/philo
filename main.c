@@ -6,7 +6,7 @@
 /*   By: heljary <heljary@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 05:07:11 by heljary           #+#    #+#             */
-/*   Updated: 2025/06/28 13:57:24 by heljary          ###   ########.fr       */
+/*   Updated: 2025/07/09 13:28:58 by heljary          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,18 @@ int main(int ac,char **args)
     ft_init_forks(rules);
     t_philosopher *philo = ft_init_philosophers(rules);
     pthread_t threads[rules->num_philosophers];
+    pthread_t monitor;
     while(i < rules->num_philosophers)
     {
         pthread_create(&threads[i],NULL,ft_routine,&philo[i]);
-        printf("philosopher[%ld] \n",i);
         i++;
     }
-    int in = 0;
-    while (in < rules->num_philosophers)
+    pthread_create(&monitor,NULL,ft_monitor_death, &philo);
+    i = 0;
+    while(i < rules->num_philosophers)
     {
-        pthread_join(threads[in],NULL);
-        in++;
+        pthread_join(threads[i],NULL);
+        i++;
     }
-    
+    pthread_join(monitor,NULL);
 }
-
-// printf("| num_philosophers = %d | time_to_die = %d | time_to_eat = %d | time_to_sleep = %d | must_eat_count = %d | start_time = %ld |\n",res->num_philosophers,res->time_to_die,res->time_to_eat,res->time_to_sleep,res->must_eat_count,res->start_time);
