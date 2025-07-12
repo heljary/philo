@@ -31,6 +31,7 @@ void *ft_init_rules(int ac,char **args)
     {
         free(ini_rules);
         return NULL;
+        printf("here\n");
     }
     pthread_mutex_init(&(ini_rules->print_mutex),NULL);
     pthread_mutex_init(&(ini_rules->meal_check_metuxes),NULL);

@@ -32,6 +32,8 @@ int main(int ac,char **args)
     
     i = 0;
     t_rules *rules = ft_init_rules(ac,args);
+    if(!rules)
+        return 0;
     ft_init_forks(rules);
     t_philosopher *philo = ft_init_philosophers(rules);
     pthread_t threads[rules->num_philosophers];
