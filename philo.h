@@ -37,5 +37,8 @@ void *ft_init_philosophers(t_rules *rules);
 void *ft_routine(void *args);
 int	ft_usleep(size_t milliseconds);
 void *ft_monitor_death(void *args);
+int	ft_isdigit(int c);
+int check_args(char *str);
+long	ft_atoi(char *str);
 
 #endif

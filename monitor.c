@@ -27,11 +27,11 @@ void *ft_monitor_death(void *args)
             if((ft_gettime() - (*philosopher)[i].last_meal_time) > (*philosopher)->rules->time_to_die)
             {
                 pthread_mutex_lock(&(*philosopher)->rules->print_mutex);
-                printf("philosopher %d is died\n",(*philosopher)[i].id);
+                printf("%ld %d died\n",ft_gettime() - (*philosopher)[i].rules->start_time,(*philosopher)[i].id);
                 pthread_mutex_unlock(&(*philosopher)->rules->print_mutex);
                 (*philosopher)->rules->simulation_running = 0;
                 pthread_mutex_unlock(&(*philosopher)->rules->meal_check_metuxes);
-                break;
+                break;;
             }
             if(((*philosopher)[i].times_eaten >= (*philosopher)->rules->must_eat_count) && (*philosopher)->rules->must_eat_count != -1)
                 count++;
@@ -40,7 +40,7 @@ void *ft_monitor_death(void *args)
         }
         if (count == i)
             (*philosopher)->rules->simulation_running = 0;
-        ft_usleep(100);
+        ft_usleep(5);
     }
     return NULL;
 }

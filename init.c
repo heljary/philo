@@ -15,14 +15,14 @@
 void *ft_init_rules(int ac,char **args)
 {
     t_rules *ini_rules = malloc(sizeof(t_rules));
-    ini_rules->num_philosophers = atoi(args[1]);
-    ini_rules->time_to_die = atoi(args[2]);
-    ini_rules->time_to_eat = atoi(args[3]);
-    ini_rules->time_to_sleep = atoi(args[4]);
+    ini_rules->num_philosophers = ft_atoi(args[1]);
+    ini_rules->time_to_die = ft_atoi(args[2]);
+    ini_rules->time_to_eat = ft_atoi(args[3]);
+    ini_rules->time_to_sleep = ft_atoi(args[4]);
     ini_rules->start_time = ft_gettime();
     ini_rules->simulation_running = 1;
     if (ac == 6)
-        ini_rules->must_eat_count = atoi(args[5]);
+        ini_rules->must_eat_count = ft_atoi(args[5]);
     else
         ini_rules->must_eat_count = -1;
     if (ini_rules->num_philosophers <= 0 || ini_rules->time_to_die <= 0 ||

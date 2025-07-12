@@ -14,11 +14,23 @@
 
 int main(int ac,char **args)
 {
-    long i = 0;
+    long i = 1;
     if(ac != 5 && ac != 6)
     {
         return 1;
     }
+
+    while (args[i])
+    {
+        if(!check_args(args[i]))
+        {
+            printf("arg [%s] is not valid \n",args[i]);
+            return 1;
+        }
+        i++;
+    }
+    
+    i = 0;
     t_rules *rules = ft_init_rules(ac,args);
     ft_init_forks(rules);
     t_philosopher *philo = ft_init_philosophers(rules);

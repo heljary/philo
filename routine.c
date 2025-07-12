@@ -12,30 +12,17 @@
 
 #include "philo.h"
 
-
-
-
-
-
-
-
-void philo_eat(t_philosopher *philo){
-    while()
-}
-
 void ft_print_status(char *status, t_philosopher *philo)
 {
-    pthread_mutex_lock(&philo->rules->print_mutex);
-    if (philo->rules->simulation_running) {
-        printf("%ld %d %s\n", 
-              ft_gettime() - philo->rules->start_time,
-              philo->id, 
-              status);
-    }
-    pthread_mutex_unlock(&philo->rules->print_mutex);
+    if(!philo->rules->simulation_running)
+        return;
+    pthread_mutex_lock(&(philo->rules->print_mutex));
+    printf("%ld %d %s\n", ft_gettime() - philo->rules->start_time, philo->id, status);
+    pthread_mutex_unlock(&(philo->rules->print_mutex));
 }
 
-void ft_eat_routine(t_rules *rules, t_philosopher *philo)
+
+void philo_take_forks(t_philosopher *philo)
 {
     if (philo->id % 2 == 0)
     {
@@ -43,10 +30,6 @@ void ft_eat_routine(t_rules *rules, t_philosopher *philo)
         ft_print_status("has taken a fork", philo);
         pthread_mutex_lock(philo->left_fork);
         ft_print_status("has taken a fork", philo);
-        ft_print_status("is eating", philo);
-        ft_usleep((size_t)(rules->time_to_eat));
-        pthread_mutex_unlock(philo->left_fork);
-        pthread_mutex_unlock(philo->right_fork);
     }
     else
     {
@@ -54,30 +37,57 @@ void ft_eat_routine(t_rules *rules, t_philosopher *philo)
         ft_print_status("has taken a fork", philo);
         pthread_mutex_lock(philo->right_fork);
         ft_print_status("has taken a fork", philo);
-        ft_print_status("is eating", philo);
-        ft_usleep((size_t)(rules->time_to_eat));
-        pthread_mutex_unlock(philo->right_fork);
-        pthread_mutex_unlock(philo->left_fork);
     }
-    if (rules->must_eat_count != -1)
+}
+
+void philo_eat(t_philosopher *philo)
+{
+    ft_print_status("is eating", philo);
+    philo->last_meal_time = ft_gettime();
+    ft_usleep(philo->rules->time_to_eat);
+    if (philo->rules->must_eat_count != -1)
         philo->times_eaten += 1;
 }
+
+void philo_put_forks(t_philosopher *philo)
+{
+    pthread_mutex_unlock(philo->left_fork);
+    pthread_mutex_unlock(philo->right_fork);
+}
+
+void philo_sleep(t_philosopher *philo)
+{
+    ft_print_status("is sleeping", philo);
+    ft_usleep(philo->rules->time_to_sleep);
+}
+
+
+void philo_think(t_philosopher *philo)
+{
+    ft_print_status("is thinking", philo);
+    ft_usleep(1);
+}
+
 
 void *ft_routine(void *args)
 {
     t_philosopher *philo = (t_philosopher *)args;
-    t_rules *rules = philo->rules;
-    if(philo->id % 2 == 0)
-            ft_usleep(100);
-    while(rules->simulation_running)
+    if(philo->rules->num_philosophers == 1)
     {
-        ft_eat_routine(rules, philo);
-        if (!rules->simulation_running)
+        ft_print_status("has taken a fork", philo);
+        return NULL;
+    }
+    if (philo->id % 2 == 0)
+        ft_usleep(5);
+    while (philo->rules->simulation_running)
+    {
+        philo_take_forks(philo);
+        philo_eat(philo);
+        philo_put_forks(philo);
+        if (!philo->rules->simulation_running)
             break;
-        ft_print_status("is sleeping", philo);
-        ft_usleep((size_t)(rules->time_to_sleep));
-        ft_print_status("is thinking", philo);
-        ft_usleep(10);
+        philo_sleep(philo);
+        philo_think(philo);
     }
     return NULL;
 }
